@@ -28,7 +28,9 @@ class SleepyPerson{
       }
     }
   
-    
+    // the color fades as the character looses energy through doing things 
+    // clickCount = 0 -> fully energized 
+    // clickCount = 4 -> fully drained 
     fade() {
       if(clickCount <= 5){
         if (clickCount == 1){
