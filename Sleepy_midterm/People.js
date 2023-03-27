@@ -22,8 +22,10 @@ class SleepyPerson{
       if(this.x_ > width){
         clickCount ++
         this.x_ = 140;
-        if (clickCount >= 5 ){
-          clickCount = 0;
+        this.y_ = this.y_ + 150;
+        if(this.y_ >= 700){
+          this.y_ = 35;
+          this.secondTime = true;
         }
       }
     }
@@ -33,6 +35,12 @@ class SleepyPerson{
     // clickCount = 4 -> fully drained 
     fade() {
       if(clickCount <= 5){
+        if (clickCount == 0){
+          rs = 242;
+          gs = 15;
+          bs = 182;
+          os = 95;
+        }
         if (clickCount == 1){
           rs = 230;
           gs = 14;
@@ -60,4 +68,84 @@ class SleepyPerson{
       }
   
     } 
+
+    // brings the coffee cup up after the second pass through the screen
+    // when ash hits the coffee cup their energy is restored and they continue to move across the screen
+    scene_1_changes(){
+      if(this.secondTime == true){
+        drink.yum();
+        if ((this.x_ >= 400) && (this.y_ >= 185)) {
+          clickCount = 0;
+          this.display(color(rs, gs, bs, os));
+          this.secondTime = false;
+        }
+      }
+    }
+
+    scene_1(){
+      this.display(color(rs, gs, bs, os));
+      this.fade();
+      this.move();
+      this.scene_1_changes();
+      scene_1_run = true;
+    }
+
+    reset_scene(){
+      clickCount = 0;
+      this.display(color(rs, gs, bs, os));
+      this.x_ = 140;
+      this.y_ = 35;
+    }
+
+
+    display_coworkers(){
+      noStroke();
+      fill(this.s_);
+      ellipse(this.x_, this.y_, 50, 50);
+    }
+
+    move_2(){
+      this.x_ = this.x_+1;
+      if(this.x_ > width){
+        this.x_ = 140;
+        this.y_ = this.y_ + 150;
+        if(this.y_ >= 700){
+          this.y_ = 35;
+          this.secondTime = true;
+        }
+      }
+    }
+
+    scene_2_changes(){
+      if((touchesC == true)&&(secondTime == true)){
+        sleep.nighty_night();
+        if ((this.x_ >= 400) && (this.y_ >= 335)) {
+          clickCount = 0;
+          this.display(color(rs, gs, bs, os));
+          this.secondTime = false;
+        }
+      }
+    }
+
+    checkTouch(){
+      for(let i = coworkers.length - 1; i >= 0; i--){
+        let h = coworkers[i];
+        if ((h.y == this.y_)&& (this.y == 600)){
+          clickCount ++;
+        }
+        if(clickCount >= 5){
+          touchesC = true;
+        }
+      }
+    }
+
+    scene_2(){
+      this.display(color(rs, gs, bs, os));
+      this.move_2();
+      work();
+      this.scene_2_changes();
+      scene_2_run = true;
+    }
   }
+
+  

@@ -16,25 +16,43 @@ os = 95;
 let bed;
 let coffee;
 
+let secondTime = false;
+let scene_1_run = false;
+let scene_2_run = false;
+
+let coworkers = [];
+let timeStart;
+let c;
+let touchesC = false;
+
 
 function setup(){
   createCanvas(800,800);
   background(250,237, 203, 98);
   ash = new SleepyPerson(140, 35, color(rs, gs, bs, os));
-  drink = new Energy(400,400);
-  sleep = new Energy(500,500);
+  drink = new Energy(400,185);
+  sleep = new Energy(400,335);
+  c = new SleepyPerson ()
 }
 
 function draw(){
   background(250,237, 203, 98);
-  ash.display(color(rs, gs, bs, os));
-  ash.fade();
-  ash.move();
+  
+  // scene 1
+  ash.scene_1();
 
-  drink.yum();
-  sleep.nighty_night();
 
+  // scene 2
+  //ash.scene_2();
 }
 
-
-
+function work(){
+  timeStart = millis();
+  if ((timeStart % 5 == 0) && (coworkers.length <=50)){
+    coworkers.push(new SleepyPerson(600,random(150, 700),color(60,177,246,96)));
+  }
+  for(let i = coworkers.length - 1; i >= 0; i--){
+    let c = coworkers[i];
+    c.display_coworkers();
+  }
+}
