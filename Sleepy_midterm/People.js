@@ -129,12 +129,14 @@ class SleepyPerson{
 
     checkTouch(){
       for(let i = coworkers.length - 1; i >= 0; i--){
-        let h = coworkers[i];
-        if ((h.y == this.y_)&& (this.y == 600)){
+        let c = coworkers[i];
+        let cx = c.x_;
+        let cy = c.y_;
+        
+        let d = dist(this.x_, this.y_, cx, cy);
+        if((d) < (50)){
           clickCount ++;
-        }
-        if(clickCount >= 5){
-          touchesC = true;
+          this.fade();
         }
       }
     }
@@ -143,9 +145,12 @@ class SleepyPerson{
       this.display(color(rs, gs, bs, os));
       this.move_2();
       work();
+      this.checkTouch();
       this.scene_2_changes();
       scene_2_run = true;
     }
+
+  
   }
 
   

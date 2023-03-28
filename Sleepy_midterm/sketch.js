@@ -26,6 +26,7 @@ let c;
 let touchesC = false;
 
 
+
 function setup(){
   createCanvas(800,800);
   background(250,237, 203, 98);
@@ -33,17 +34,18 @@ function setup(){
   drink = new Energy(400,185);
   sleep = new Energy(400,335);
   c = new SleepyPerson ()
+  testCoworker = new SleepyPerson(600, 35, color(0));
 }
 
 function draw(){
   background(250,237, 203, 98);
   
   // scene 1
-  ash.scene_1();
+  //ash.scene_1();
 
 
   // scene 2
-  //ash.scene_2();
+  ash.scene_2();
 }
 
 function work(){
@@ -56,3 +58,4 @@ function work(){
     c.display_coworkers();
   }
 }
+
