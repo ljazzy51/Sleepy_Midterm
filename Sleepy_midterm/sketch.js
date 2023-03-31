@@ -24,6 +24,8 @@ let coworkers = [];
 let timeStart;
 let c;
 let touchesC = false;
+let workRun = true;
+let grow;
 
 
 
@@ -32,7 +34,7 @@ function setup(){
   background(250,237, 203, 98);
   ash = new SleepyPerson(140, 35, color(rs, gs, bs, os));
   drink = new Energy(400,185);
-  sleep = new Energy(400,335);
+  sleep = new Energy(350,375);
   c = new SleepyPerson ()
   testCoworker = new SleepyPerson(600, 35, color(0));
 }
@@ -49,13 +51,15 @@ function draw(){
 }
 
 function work(){
-  timeStart = millis();
-  if ((timeStart % 5 == 0) && (coworkers.length <=50)){
-    coworkers.push(new SleepyPerson(600,random(150, 700),color(60,177,246,96)));
-  }
-  for(let i = coworkers.length - 1; i >= 0; i--){
-    let c = coworkers[i];
-    c.display_coworkers();
+  if (workRun == true){
+    timeStart = millis();
+    if ((timeStart % 5 == 0) && (coworkers.length <=25)){
+      coworkers.push(new SleepyPerson(random(150, 700),random(150, 700),color(60,177,246,96)));
+    }
+    for(let i = coworkers.length - 1; i >= 0; i--){
+      let c = coworkers[i];
+      c.display_coworkers();
+    }
   }
 }
 

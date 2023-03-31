@@ -7,13 +7,14 @@ class SleepyPerson{
       this.x_ = x;
       this.y_ = y;
       this.s_ = s;
+      this.size = 50;
     }
     // this. allows for a varaible accross a class in various methods so it can be seen 
     // this is a method. something the objects can do
     display(s_) {
       noStroke();
       fill(s_);
-      ellipse(this.x_, this.y_, 50, 50);
+      ellipse(this.x_, this.y_, this.size, this.size);
       
     }
   
@@ -101,11 +102,12 @@ class SleepyPerson{
     display_coworkers(){
       noStroke();
       fill(this.s_);
-      ellipse(this.x_, this.y_, 50, 50);
+      ellipse(this.x_, this.y_, this.size, this.size);
     }
 
     move_2(){
-      this.x_ = this.x_+1;
+      this.x_ = this.x_+ random(0.5,1.5);
+      this.y_ = this.y_ + random(-1,1);
       if(this.x_ > width){
         this.x_ = 140;
         this.y_ = this.y_ + 150;
@@ -117,13 +119,22 @@ class SleepyPerson{
     }
 
     scene_2_changes(){
-      if((touchesC == true)&&(secondTime == true)){
-        sleep.nighty_night();
-        if ((this.x_ >= 400) && (this.y_ >= 335)) {
-          clickCount = 0;
-          this.display(color(rs, gs, bs, os));
-          this.secondTime = false;
+      if(bed == true){
+        if(this.size > 50){
+          this.size = this.size - 1;
         }
+        sleep.nighty_night();
+        if(this.size == 50){
+          clickCount = 0;
+          this.fade();
+          bed = false;
+        }
+      }
+      if(bed == false){
+        this.x_ = 400;
+        this.y_ = 400;
+        this.x_ = 140;
+        this.y_ = 35;
       }
     }
 
@@ -135,11 +146,40 @@ class SleepyPerson{
         
         let d = dist(this.x_, this.y_, cx, cy);
         if((d) < (50)){
-          clickCount ++;
-          this.fade();
+          //this.fade();
+         // clickCount += 1;
+          touchesC = true;
+        } 
+      }
+      this.touch_changes();
+    }
+
+    touch_changes(){
+      
+      if(touchesC == true){
+        workRun = false;
+        coworkers.splice(0,25);
+        this.x_ = 400;
+        this.y_ = 400;
+        if(this.size <= width && grow != false){
+          grow = true;
+          this.size = this.size + 1;
+          if(this.size % 100 == 0){
+            clickCount++;
+            this.fade();
+          }
+        }
+        if(this.size > width){
+          grow = false;
+        }
+        if(grow == false && bed != true){
+          bed = true;
         }
       }
     }
+  
+
+    
 
     scene_2(){
       this.display(color(rs, gs, bs, os));
