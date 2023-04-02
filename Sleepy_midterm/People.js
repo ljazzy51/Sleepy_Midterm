@@ -17,7 +17,8 @@ class SleepyPerson{
       ellipse(this.x_, this.y_, this.size, this.size);
       
     }
-  
+
+    // Code used for scene one mostly but some (like fade) reused throughout 
     move() {
       this.x_ = this.x_+1;
       if(this.x_ > width){
@@ -91,6 +92,7 @@ class SleepyPerson{
       scene_1_run = true;
     }
 
+    // resets the scene to the original placement and size of ash 
     reset_scene(){
       clickCount = 0;
       this.display(color(rs, gs, bs, os));
@@ -98,7 +100,7 @@ class SleepyPerson{
       this.y_ = 35;
     }
 
-
+    // start of code thats used in scene 2
     display_coworkers(){
       noStroke();
       fill(this.s_);
@@ -150,6 +152,13 @@ class SleepyPerson{
          // clickCount += 1;
           touchesC = true;
         } 
+
+         /* Got the idea on how to use the distance formula to detect touching from youtuber Chris Courses --
+         "How to code: Collision Detection pt 1". This just checks to see where the distance of ash is in relation
+         to any of the 'coworkers' and if it is less than the combined radii of the coworker and ash (50)
+         then the scene changes because that means that ash touched one of them and changed the boolean to true
+         */
+
       }
       this.touch_changes();
     }
@@ -177,9 +186,6 @@ class SleepyPerson{
         }
       }
     }
-  
-
-    
 
     scene_2(){
       this.display(color(rs, gs, bs, os));
@@ -190,6 +196,58 @@ class SleepyPerson{
       scene_2_run = true;
     }
 
+    // start of code for scene 3 
+    put_on_hat(){
+      if((this.y_ < 240) || (this.x_ < 475)){
+        party_hat(450, 265);
+        this.x_ = this.x_+ 2;
+        if(this.x_ > width){
+          this.x_ = 35;
+          this.y_ = this.y_ + 50;
+        }
+      }
+    }
+
+    hat_on(){
+      if((this.x_ == 475 && this.y_ == 240) || (this.x_ >= 475 && this.y_ >= 240)){
+        party_hat(this.x_ - 25, this.y_ - 25);
+        party_hat_on = true;
+      }
+    }
+
+    dance(){
+      if(party_hat_on == true){
+        party_hat(this.x_ - 25, this.y_ - 25);
+        timeStart = millis();
+        if(timeStart % 2 == 0){
+          this.x_ = random(100, 650);
+          this.y_ = random(100, 650);
+        }
+      }
+    }
+    
+    // FIX TOMORROW !!!
+    getting_sleepy(){
+      let getting_late = second();
+      if(getting_late % 10){
+        clickCount ++;
+        this.fade();
+      }
+    }
+
+    scene_3(){
+      //clickCount = 0;
+      this.display(color(rs, gs, bs, os));
+      if (party_hat_on == false){
+        this.put_on_hat();
+      }
+      this.hat_on();
+      if(party_hat_on == true){
+        this.dance();
+        lights_change();
+        this.getting_sleepy();
+      }
+    }
   
   }
 
