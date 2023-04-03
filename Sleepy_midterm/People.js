@@ -20,14 +20,18 @@ class SleepyPerson{
 
     // Code used for scene one mostly but some (like fade) reused throughout 
     move() {
-      this.x_ = this.x_+1;
+      this.x_ = this.x_+ vel;
       if(this.x_ > width){
         clickCount ++
+        vel = vel - 0.75;
         this.x_ = 140;
         this.y_ = this.y_ + 150;
         if(this.y_ >= 700){
           this.y_ = 35;
           this.secondTime = true;
+        }
+        if(vel <= 1){
+          vel = 1;
         }
       }
     }
@@ -79,17 +83,26 @@ class SleepyPerson{
         if ((this.x_ >= 400) && (this.y_ >= 185)) {
           clickCount = 0;
           this.display(color(rs, gs, bs, os));
+          vel = 2;
           this.secondTime = false;
+          reenergized = true;
         }
       }
     }
 
     scene_1(){
-      this.display(color(rs, gs, bs, os));
-      this.fade();
-      this.move();
-      this.scene_1_changes();
-      scene_1_run = true;
+      if(scene_1_run == false){
+        this.display(color(rs, gs, bs, os));
+        this.fade();
+        this.move();
+        this.scene_1_changes();
+      }
+      if (reenergized == true){
+        scene_1_run = true;
+        clickCount = 0;
+        this.fade();
+        this.display(color(rs, gs, bs, os));
+      }
     }
 
     // resets the scene to the original placement and size of ash 
@@ -137,6 +150,7 @@ class SleepyPerson{
         this.y_ = 400;
         this.x_ = 140;
         this.y_ = 35;
+        reenergized2 = true;
       }
     }
 
@@ -193,7 +207,9 @@ class SleepyPerson{
       work();
       this.checkTouch();
       this.scene_2_changes();
-      scene_2_run = true;
+      if(reenergized2 == true){
+        scene_2_run = true;
+      }
     }
 
     // start of code for scene 3 
@@ -225,30 +241,80 @@ class SleepyPerson{
         }
       }
     }
+
+    display_guests(){
+      noStroke();
+      fill(this.s_);
+      ellipse(this.x_, this.y_, this.size, this.size);
+    }
     
-    // FIX TOMORROW !!!
     getting_sleepy(){
-      let getting_late = second();
-      if(getting_late % 10){
-        clickCount ++;
-        this.fade();
+      check_time();
+      print(time_control);
+      if(time_control > 10){
+        clock(250,250);
+        getting_late = true;
       }
     }
+
+    tired(){
+      if(getting_late == true){
+        check_time();
+        if (time_control > 15){
+          frameRate(7);
+          alert = true;
+          clickCount ++;
+          this.fade();
+          if(time_control > 20){
+            party_guests.splice(0,party_guests.length);
+            bedtime = true;
+            lights = false;
+            fade_background();
+          }
+        } 
+      }
+    }
+
+    time_for_bed(){
+      if(bedtime == true){
+        frameRate(30);
+        party_on = false;
+        sleep.nighty_night();
+        if(bed == true){
+          background(0);
+          this.x_ = 400;
+          this.y_ = 400;
+          party_hat_on = false;
+          sleep.nighty_night();
+          clickCount = 0;
+          this.fade();
+          this.display(color(rs, gs, bs, os));
+        }
+      }
+    }
+
+
 
     scene_3(){
       //clickCount = 0;
       this.display(color(rs, gs, bs, os));
-      if (party_hat_on == false){
+      if (party_hat_on == false && bedtime == false){
         this.put_on_hat();
       }
       this.hat_on();
       if(party_hat_on == true){
         this.dance();
+        party_people();
         lights_change();
         this.getting_sleepy();
+        this.tired();
       }
+      if(bedtime == true){
+        this.time_for_bed();
+      }
+      scene_3_run = true;
     }
-  
+
   }
 
   

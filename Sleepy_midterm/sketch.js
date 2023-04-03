@@ -5,6 +5,8 @@
 let ash;
 let drink;
 let sleep;
+let reenergized = false;
+let reenergized2 = false;
 let rs, gs, bs, os;
 let clickCount;
 clickCount = 0;
@@ -13,12 +15,15 @@ gs = 15;
 bs = 182;
 os = 95;
 
+let vel = 4.5;
+
 let bed;
 let coffee;
 
 let secondTime = false;
 let scene_1_run = false;
 let scene_2_run = false;
+let scene_3_run = false;
 
 let coworkers = [];
 let timeStart;
@@ -36,7 +41,16 @@ let orange_light = [247, 154, 12, 20];
 let background_colors = [];
 let colors_random;
 
+let getting_late;
+let time_control = 0;
+let alert = false;
+let bedtime = false;
+let party_on = true;
+let party_guests = [];
+let lights = true;
 
+let fadeB = true;
+let alpha = 0;
 
 function setup(){
   createCanvas(800,800);
@@ -55,16 +69,23 @@ function draw(){
   /* Ash goes through the motions of a busy day by bouncing around the screen. When he leave the screen
    he fades in color to show gaining sleepiness. When he reaches peak sleepiness (The darkest shade) 
    a coffee appears for him and he goes to drink the coffee. When he drinks the coffee his energy is restored
-   and he moves onto scene 2 */
-  //ash.scene_1();
-
+   and he moves onto scene 2 
+  */
+  
+  if(scene_1_run == false){
+    ash.scene_1();
+  }
 
   // scene 2
   /* Scene 2 is a busy day at work where ash is going about his day and trying to avoid talking to other people. 
    When he talks to other people (touches them) then he becomes so frustrated with sleepiness that everything else
    goes away and he grows and grows with frustration and then when the bed appears he calms down and goes to sleep. 
-   Sleeping restores ashes color and he goes on to scene 3 */ 
-  //ash.scene_2();
+   Sleeping restores ashes color and he goes on to scene 3 
+  */ 
+  
+  if (scene_1_run == true && scene_2_run == false){
+    ash.scene_2();
+  }
 
   // scene 3
   /* Scene 3 is the party scene. After his nap from a long day of moving around and work, he remembers that he was going 
@@ -73,11 +94,13 @@ function draw(){
    he goes off to sleep. This is the end of the program 
   */
   
-  //lights_change();
-  ash.scene_3();
+  if (scene_1_run == true && scene_2_run == true){
+    ash.scene_3();
+  }
   
 }
 
+// coworkers
 function work(){
   if (workRun == true){
     timeStart = millis();
@@ -87,6 +110,20 @@ function work(){
     for(let i = coworkers.length - 1; i >= 0; i--){
       let c = coworkers[i];
       c.display_coworkers();
+    }
+  }
+}
+
+//party guests
+function party_people(){
+  if (party_on == true && getting_late != true){
+    timeStart = millis();
+    if ((timeStart % 2 == 0) && (party_guests.length <= 50)){
+      party_guests.push(new SleepyPerson(random(100, 700),random(100, 700),color(random(0,255))));
+    }
+    for(let i = party_guests.length - 1; i >= 0; i--){
+      let p = party_guests[i];
+      p.display_guests();
     }
   }
 }
@@ -127,6 +164,7 @@ function party_hat(x1,y1){
   ellipse(x1 + 25, y1 - 54, 9, 9);
 }
 
+// creates flashing lights for the party 
 function lights_change(){
   background_colors = [green_light, blue_light, pink_light, orange_light];
   //frameRate(3);
@@ -143,5 +181,71 @@ function lights_change(){
   if(pick_random == 3){
     fill(background_colors[3]);
   }
+  if(lights == false){
+    noFill();
+    noStroke();
+  }
   rect(0,0, 800,800);
+
+}
+
+function clock(x2,y2){
+  
+  if(getting_late == true){
+    x2 = x2 + random(-1,1);
+    y2 = y2 + random(-2,2);
+  }
+
+  // making the clock 
+  fill(255);
+  stroke(0);
+  strokeWeight(3);
+  ellipse(x2,y2, 100,100);
+  // inner circle
+  fill(0);
+  ellipse(x2, y2, 7, 7);
+  strokeWeight(3);
+  // hour hand 
+  line(x2, y2, x2, y2 - 25);
+  line(x2-7, y2-20, x2, y2 - 25);
+  line(x2+7, y2-20, x2, y2 - 25);
+  // minute hand
+  line(x2, y2, x2 + 20, y2 + 25);
+  line(x2 + 20, y2 + 25, x2 + 7, y2 + 23);
+  line(x2 + 20, y2 + 25, x2 + 23, y2 + 13);
+
+}
+
+//makes a time stamp
+function check_time(){
+  if (millis() % 5 == 0){
+    time_control += 1; 
+  }
+  if(time_control > 1000){
+    time_control = 0;
+  }
+}
+
+// used for the clock motion 
+function clock_alert(x,y){
+  if(getting_late == true){
+    x = clock.x + random(-1,1);
+    y = clock.y + random(-2,2);
+  }
+}
+
+// used at the end 
+function fade_background(){
+  background(250,237, 203, 98);
+  noStroke();
+  fill(0,0, 0, alpha);
+  rect(0,0,800,800);
+  if (fadeB == true){
+    alpha = alpha + 1;
+  }
+  if(alpha == 100){
+    background(0);
+    bed = true;
+  }
+ 
 }
